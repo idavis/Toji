@@ -4,19 +4,19 @@
     <id>Example</id>
     <version>1.0.0</version>
     <authors>Ian Davis</authors>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <licenseUrl></licenseUrl>
+    <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl></licenseUrl>-->
     <description>Description</description>
     <summary></summary>
     <language>en-US</language>
     <tags></tags>
-    <iconUrl></iconUrl>
+    <!--<iconUrl></iconUrl>
     <projectUrl></projectUrl>
-    <files>
-        <file src=".\Bin\**\*.*" target="" /> 
-    </files>
-    <!--<dependencies>
+    <dependencies>
       <dependency id="" version="" />
     </dependencies> -->
   </metadata>
+  <files>
+      <file src="..\bin\Example.dll" target="lib\40" /> 
+  </files>
 </package>

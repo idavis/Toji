@@ -10,6 +10,7 @@ release
 *.cache
 MSBuildOutput.txt
 TestResults
+TestResult.xml
 parser.lst
 parser.report.html
 PowerStudio.1.1.dotCover

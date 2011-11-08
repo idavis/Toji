@@ -11,8 +11,8 @@ properties {
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
   # add either the project_name or nuspec file to use when packaging.
-  $nuget.target = "$($source.dir)\Example\Example.csproj"#"$($source.dir)\Example.nuspec"
-  $nuget.project = "$($nuget.project_name).csproj"
+  $nuget.target = "$($source.dir)\Example.nuspec"
+  #$nuget.target = "$($source.dir)\Example\Example.csproj"
   $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"
   #$nuget.options = "-Sym"
   $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
