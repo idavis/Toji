@@ -5,8 +5,7 @@
 # See the file LICENSE.txt for details.
 # 
 
-$path = (Resolve-Path "..\Example")
-Test-Path $path
+$path = (Resolve-Path ".\..\")
 Push-Location $path
 Write-Output "Loading Nuget Dependencies"
 $nuget = Resolve-Path ".\Tools\Nuget\NuGet.exe"

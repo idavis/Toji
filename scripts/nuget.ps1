@@ -11,13 +11,11 @@ properties {
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
   # add either the project_name or nuspec file to use when packaging.
-  $nuget.project_name = "Example"
-  $nuget.nuspec = "Example.nuspec"
-  $nuget.project_folder = (Resolve-Path "$($source.dir)\$($nuget.project_name)")
-  $nuget.project = "$($nuget.project_folder)\$($nuget.project_name).csproj"
-  $nuget.options = "$($nuget.project) -Sym -Properties Configuration=$($build.configuration)"
-  #$nuget.options = "$($nuget.nuspec) -Sym"
-  
+  $nuget.target = "$($source.dir)\Example\Example.csproj"#"$($source.dir)\Example.nuspec"
+  $nuget.project = "$($nuget.project_name).csproj"
+  $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"
+  #$nuget.options = "-Sym"
+  $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
   Assert (![string]::IsNullOrEmpty($nuget.file)) "The location of the nuget exe must be specified."
   Assert (Test-Path($nuget.file)) "Could not find nuget exe"
 }
@@ -28,11 +26,11 @@ Task Bootstrap-NuGetPackages {
 }
 
 Task Package -Depends Test {
-  $path = if(Test-Path($nuget.project)) { Split-Path $nuget.project } else { Resolve-Path $nuget.nuspec }
+  $path = Split-Path $nuget.target
   Write-Host "Moving into $path"
   Push-Location $path
-  Write-Host "Executing exec { & $($nuget.file) pack -Version $($build.version) -OutputDirectory $($nuget.pub_dir) }"
-  exec { & $nuget.file pack -Version $build.version -OutputDirectory $nuget.pub_dir }
+  Write-Host "Executing exec { & $($nuget.file) $($nuget.command) }"
+  exec { Invoke-Expression $nuget.command }
   Pop-Location
 }
 

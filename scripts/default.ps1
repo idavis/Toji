@@ -25,8 +25,7 @@ param(
 # We need to remove the module if it is already loaded.
 remove-module psake -ea 'SilentlyContinue'
 
-#$packages = (Resolve-Path ..\Packages)
-$packages = (Resolve-Path ..\Example\Packages)
+$packages = (Resolve-Path ..\Packages)
 
 # Load psake
 $scriptPath = Split-Path -parent $MyInvocation.MyCommand.path

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Example</id>
+    <version>1.0.0</version>
+    <authors>Ian Davis</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl></licenseUrl>
+    <description>Description</description>
+    <summary></summary>
+    <language>en-US</language>
+    <tags></tags>
+    <iconUrl></iconUrl>
+    <projectUrl></projectUrl>
+    <files>
+        <file src=".\Bin\**\*.*" target="" /> 
+    </files>
+    <!--<dependencies>
+      <dependency id="" version="" />
+    </dependencies> -->
+  </metadata>
+</package>

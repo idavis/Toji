@@ -10,14 +10,13 @@ properties {
   Write-Output "Loading settings properties"
   
   $base = @{}
-  #$base.dir = resolve-path .
-  $base.dir = (resolve-path ..\Example)
+  $base.dir = resolve-path .\..\
   
   $source = @{}
   $source.dir = "$($base.dir)\src"
   
   $build = @{}
-  $build.dir = "$($base.dir)\build"
+  $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
   $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "1.0.0" }
   

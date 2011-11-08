@@ -3,6 +3,7 @@ bin
 obj
 build
 dist
+release
 *.suo
 *resharper*
 *.user

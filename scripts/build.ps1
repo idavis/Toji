@@ -7,9 +7,9 @@
 
 Include settings.ps1
 #Include xunit.ps1
-#Include nunit.ps1
-#Include nuget.ps1
-#Include msbuild.ps1
+Include nunit.ps1
+Include nuget.ps1
+Include msbuild.ps1
 
 properties {
   Write-Output "Loading build properties"
