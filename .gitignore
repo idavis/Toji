@@ -1,0 +1,15 @@
+_ReSharper.*
+bin
+obj
+build
+dist
+*.suo
+*resharper*
+*.user
+*.cache
+MSBuildOutput.txt
+TestResults
+parser.lst
+parser.report.html
+PowerStudio.1.1.dotCover
+Packages/
