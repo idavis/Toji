@@ -1,4 +1,4 @@
-# 
+﻿# 
 # Copyright (c) 2011, Toji Project Contributors
 # 
 # Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
@@ -11,11 +11,15 @@ properties {
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
   # add either the project_name or nuspec file to use when packaging.
-  $nuget.target = "$($source.dir)\Example.nuspec"
-  #$nuget.target = "$($source.dir)\Example\Example.csproj"
-  $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"
-  #$nuget.options = "-Sym"
+  $nuget.target = "$($source.dir)\$($solution.name).nuspec"
+  $nuget.options = "-Sym"
+  if(!(Test-Path($nuget.target))) {  
+    $nuget.target = "$($source.dir)\$($solution.name)\$($solution.name).csproj"
+    $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"
+  }
   $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
+  Assert (![string]::IsNullOrEmpty($nuget.target)) "The location of the nuget exe must be specified."
+  Assert (Test-Path($nuget.target)) "Could not find nuget exe"
   Assert (![string]::IsNullOrEmpty($nuget.file)) "The location of the nuget exe must be specified."
   Assert (Test-Path($nuget.file)) "Could not find nuget exe"
 }
@@ -25,11 +29,12 @@ Task Bootstrap-NuGetPackages {
   . { Get-ChildItem -recurse -include packages.config | % { & $nuget.file i $_ -o Packages } }
 }
 
-Task Package -Depends Test {
+Task Package {
+  if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
   $path = Split-Path $nuget.target
   Write-Host "Moving into $path"
   Push-Location $path
-  Write-Host "Executing exec { & $($nuget.file) $($nuget.command) }"
+  Write-Host "Executing exec { Invoke-Expression $($nuget.command) }"
   exec { Invoke-Expression $nuget.command }
   Pop-Location
 }

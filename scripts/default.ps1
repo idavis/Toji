@@ -1,4 +1,4 @@
-
+﻿
 # Helper script for those who want to run psake without importing the module.
 # This script is heavily based on the original psake.ps1
 # A NuGet bootstrapper is added allowing the script to download and install psake

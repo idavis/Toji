@@ -14,7 +14,9 @@ properties {
   
   $source = @{}
   $source.dir = "$($base.dir)\src"
-  
+  if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)\source" }
+  if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)" }
+	
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
@@ -24,7 +26,7 @@ properties {
   $tools.dir = "$($base.dir)\tools"
   
   $solution = @{}
-  $solution.name = "Example"
+  $solution.name = "$(Split-Path $($base.dir) -leaf)"
   $solution.file = "$($base.dir)\$($solution.name).sln"
   $solution.assembly_info = "$($base.dir)\GlobalAssemblyInfo.cs"
   

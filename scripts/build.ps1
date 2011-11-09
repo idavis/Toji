@@ -7,7 +7,7 @@
 
 Include settings.ps1
 #Include xunit.ps1
-Include nunit.ps1
+#Include nunit.ps1
 Include nuget.ps1
 Include msbuild.ps1
 
@@ -17,8 +17,9 @@ properties {
   # and will not have access to any of your shared properties.
 }
 
-Task Default -depends Init, Compile, Test
+Task Default -depends Init, Compile#, Test
 Task Release -depends Default, Package
+Task Deploy -depends Package, Publish
 
 Task Test { 
   $test_dlls = gci "$($build.dir)\*.Tests.dll"
