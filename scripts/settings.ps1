@@ -20,7 +20,7 @@ properties {
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
-  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "0.1.0" }
+  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "0.1.1" }
   
   $tools = @{}
   $tools.dir = "$($base.dir)\tools"
@@ -29,6 +29,23 @@ properties {
   $solution.name = "$(Split-Path $($base.dir) -leaf)"
   $solution.file = "$($base.dir)\$($solution.name).sln"
   $solution.assembly_info = "$($base.dir)\GlobalAssemblyInfo.cs"
+  $solution.assembly_info_contents = @"
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+
+[assembly: AssemblyCompany(`"`")]
+[assembly: AssemblyProduct(`"`")]
+[assembly: AssemblyCopyright(`"Copyright © 2011`")]
+[assembly: AssemblyTrademark(`"`")]
+[assembly: AssemblyCulture(`"`")]
+[assembly: AssemblyVersion(`"1.0.0`")]
+[assembly: AssemblyFileVersion(`"1.0.0`")]
+"@
   
   $release = @{}
   $release.dir = "$($base.dir)\release"

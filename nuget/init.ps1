@@ -1,7 +1,6 @@
 ﻿param($rootPath, $toolsPath, $package, $project)
 
 $tojiPath = "build"
-if(Test-Path("$rootPath\$tojiPath")) { $tojiPath = "scripts" } elseif(Test-Path("$rootPath\$tojiPath")) { $tojiPath = "toji" } 
 
 $files = Get-ChildItem "$toolsPath\scripts\*" -exclude settings.ps1, build.ps1
 

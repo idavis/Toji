@@ -17,7 +17,7 @@ properties {
   # and will not have access to any of your shared properties.
 }
 
-Task Default -depends Init, Compile#, Test
+Task Default -depends Init, Compile #, Test
 Task Release -depends Default, Package
 Task Deploy -depends Package, Publish
 
@@ -45,6 +45,7 @@ Task Clean {
 }
 
 Task Version {
+  if(!(Test-Path($solution.assembly_info_contents))) { Set-Content -Value $solution.assembly_info_contents -Path $solution.assembly_info }
   #$version_pattern = "\d*\.\d*\.\d*\.\d*"  # 4 digit
   $version_pattern = "\d*\.\d*\.\d*"   # 3 digit for semver
   $content = Get-Content $solution.assembly_info | % { [Regex]::Replace($_, $version_pattern, $build.version) } 

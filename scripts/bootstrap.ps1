@@ -8,7 +8,16 @@
 $path = (Resolve-Path ".\..\")
 Push-Location $path
 Write-Output "Loading Nuget Dependencies"
-$nuget = Resolve-Path ".\Tools\Nuget\NuGet.exe"
+$nuget = ".\Tools\Nuget\NuGet.exe"
+if(!(Test-Path($nuget))) {  
+  $nugets = @(Get-ChildItem "..\*" -recurse -include NuGet.exe)
+    if ($nugets.Length -le 0) { 
+     Write-Host -ForegroundColor Red "No NuGet executables found."
+     return 
+  }
+  $nuget = $nugets[0].FullName
+}
+$nuget = Resolve-Path $nuget
 $output = "Packages"
 $package_files = Get-ChildItem . -recurse -include packages.config
 $package_files | % { & $nuget i $_ -OutputDirectory $output }

@@ -10,6 +10,9 @@ properties {
   $nuget = @{}
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
+  if(!(Test-Path($nuget.file))) {  
+    $nuget.file = (Get-ChildItem "$($packages.dir)\*" -recurse -include NuGet.exe).FullName
+  }
   # add either the project_name or nuspec file to use when packaging.
   $nuget.target = "$($source.dir)\$($solution.name).nuspec"
   $nuget.options = ""
