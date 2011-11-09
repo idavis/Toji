@@ -29,7 +29,7 @@ Task Bootstrap-NuGetPackages {
   . { Get-ChildItem -recurse -include packages.config | % { & $nuget.file i $_ -o Packages } }
 }
 
-Task Package {
+Task Package -depends Set-Version {
   if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
   $path = Split-Path $nuget.target
   Write-Host "Moving into $path"
@@ -43,4 +43,11 @@ Task Publish {
   Push-Location "$($nuget.pub_dir)"
   ls "*$($build.version).nupkg" | % { & $nuget.file push $_ }
   Pop-Location
+}
+
+Task Set-Version {
+  #$version_pattern = "\d*\.\d*\.\d*\.\d*"  # 4 digit
+  $version_pattern = "<version>\d*\.\d*\.\d*</version>"   # 3 digit for semver
+  $content = Get-Content $nuget.target | % { [Regex]::Replace($_, $version_pattern, "<version>$($build.version)</version>") } 
+  Set-Content -Value $content -Path $nuget.target
 }
