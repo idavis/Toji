@@ -12,7 +12,7 @@ properties {
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
   # add either the project_name or nuspec file to use when packaging.
   $nuget.target = "$($source.dir)\$($solution.name).nuspec"
-  $nuget.options = "-Sym"
+  $nuget.options = ""
   if(!(Test-Path($nuget.target))) {  
     $nuget.target = "$($source.dir)\$($solution.name)\$($solution.name).csproj"
     $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"

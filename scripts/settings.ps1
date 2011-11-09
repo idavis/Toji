@@ -16,11 +16,11 @@ properties {
   $source.dir = "$($base.dir)\src"
   if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)\source" }
   if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)" }
-	
+
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
-  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "1.0.0" }
+  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "0.1.0" }
   
   $tools = @{}
   $tools.dir = "$($base.dir)\tools"
