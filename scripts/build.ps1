@@ -10,6 +10,7 @@ Include settings.ps1
 #Include nunit.ps1
 Include nuget.ps1
 Include msbuild.ps1
+Include assemblyinfo.ps1
 
 properties {
   Write-Output "Loading build properties"
@@ -37,19 +38,11 @@ Task Init -depends Clean {
   new-item $build.dir -itemType directory | Out-Null
 }
 
-Task Compile -depends Version, Init, Invoke-MsBuild
+Task Compile -depends Version-AssemblyInfo, Init, Invoke-MsBuild
 
 Task Clean { 
   remove-item -force -recurse $build.dir -ErrorAction SilentlyContinue | Out-Null
   remove-item -force -recurse $release.dir -ErrorAction SilentlyContinue | Out-Null
-}
-
-Task Version {
-  if(!(Test-Path($solution.assembly_info))) { Set-Content -Value $solution.assembly_info_contents -Path $solution.assembly_info }
-  #$version_pattern = "\d*\.\d*\.\d*\.\d*"  # 4 digit
-  $version_pattern = "\d*\.\d*\.\d*"   # 3 digit for semver
-  $content = Get-Content $solution.assembly_info | % { [Regex]::Replace($_, $version_pattern, $build.version) } 
-  Set-Content -Value $content -Path $solution.assembly_info
 }
 
 Task ? -Description "Helper to display task info" {

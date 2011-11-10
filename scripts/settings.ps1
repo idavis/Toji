@@ -16,7 +16,7 @@ properties {
   $source.dir = "$($base.dir)\src"
   if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)\source" }
   if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)" }
-
+  
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
@@ -28,24 +28,6 @@ properties {
   $solution = @{}
   $solution.name = "$(Split-Path $($base.dir) -leaf)"
   $solution.file = "$($base.dir)\$($solution.name).sln"
-  $solution.assembly_info = "$($base.dir)\GlobalAssemblyInfo.cs"
-  $solution.assembly_info_contents = @"
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
-[assembly: AssemblyCompany(`"`")]
-[assembly: AssemblyProduct(`"`")]
-[assembly: AssemblyCopyright(`"Copyright © 2011`")]
-[assembly: AssemblyTrademark(`"`")]
-[assembly: AssemblyCulture(`"`")]
-[assembly: AssemblyVersion(`"1.0.0`")]
-[assembly: AssemblyFileVersion(`"1.0.0`")]
-"@
   
   $release = @{}
   $release.dir = "$($base.dir)\release"
