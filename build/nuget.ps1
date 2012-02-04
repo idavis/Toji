@@ -7,6 +7,10 @@
 
 properties {
   Write-Output "Loading nuget properties"
+  # see if we should be using chewie, load if needed
+  $usingChewie = (Test-Path "$($base.dir)\.NugetFile")
+  if($usingChewie) { Import-Module "$pwd\chewie.psm1" }
+  
   $nuget = @{}
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
@@ -29,27 +33,37 @@ properties {
 
 Task Bootstrap-NuGetPackages {
   Write-Output "Loading Nuget Dependencies"
-  . { Get-ChildItem -recurse -include packages.config | % { & $nuget.file i $_ -o Packages } }
+  Push-Location "$($base.dir)"
+  try {
+    if($usingChewie) {
+      Write-Output "Running chewie"
+      Invoke-Chewie
+    } else {
+      Write-Output "Loading NuGet package files"
+      . { Get-ChildItem -recurse -include packages.config | % { & $nuget.file i $_ -o Packages } }
+    }
+  } finally { Pop-Location }
 }
 
-Task Package -depends Set-Version {
+Task Package -depends Set-NuSpecVersion {
   if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
   $path = Split-Path $nuget.target
   Write-Host "Moving into $path"
   Push-Location $path
-  Write-Host "Executing exec { Invoke-Expression $($nuget.command) }"
-  exec { Invoke-Expression $nuget.command }
-  Pop-Location
+  try {
+    Write-Host "Executing exec { Invoke-Expression $($nuget.command) }"
+    exec { Invoke-Expression $nuget.command }
+  } finally { Pop-Location }
 }
 
 Task Publish {
   Push-Location "$($nuget.pub_dir)"
-  ls "*$($build.version).nupkg" | % { & $nuget.file push $_ }
-  Pop-Location
+  try {
+    ls "*$($build.version).nupkg" | % { & $nuget.file push $_ }
+  } finally { Pop-Location }
 }
 
-Task Set-Version {
-  #$version_pattern = "\d*\.\d*\.\d*\.\d*"  # 4 digit
+Task Set-NuSpecVersion {
   $version_pattern = "<version>\d*\.\d*\.\d*</version>"   # 3 digit for semver
   $content = Get-Content $nuget.target | % { [Regex]::Replace($_, $version_pattern, "<version>$($build.version)</version>") } 
   Set-Content -Value $content -Path $nuget.target

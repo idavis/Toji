@@ -30,8 +30,7 @@ $scriptPath = Split-Path -parent $myInvocation.MyCommand.Definition
 $rootPath = (Resolve-Path $scriptPath\..)
 
 # Load psake
-$psakeModule = (Get-ChildItem $rootPath\* -recurse -include psake.psm1).FullName
-Write-Output "Loading psake module : $psakeModule"
+$psakeModule = @(Get-ChildItem $rootPath\* -recurse -include psake.psm1)[0].FullName
 Import-Module $psakeModule
 if (-not(test-path $buildFile)) { $buildFile = (join-path $scriptPath $buildFile) } 
 

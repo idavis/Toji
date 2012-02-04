@@ -32,7 +32,7 @@ Task IntegrationTest -depends Test {
   Invoke-TestRunner $test_dlls
 }
 
-Task Init -depends Clean {
+Task Init -depends Clean, Bootstrap-NuGetPackages {
   #Bootstrap-NuGet
   new-item $release.dir -itemType directory | Out-Null
   new-item $build.dir -itemType directory | Out-Null
