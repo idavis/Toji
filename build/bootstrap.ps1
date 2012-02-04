@@ -6,8 +6,13 @@
 # Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 # See the file LICENSE.txt for details.
 # 
-  
-$path = (Resolve-Path "$(Split-Path -parent $myInvocation.MyCommand.Definition)\..\").Path
+
+param(
+  [Parameter( Position = 0, Mandatory = 0 )]
+  [string] $install_to = 'Packages'
+)
+
+$path = (Resolve-Path "$(Split-Path -parent $MyInvocation.MyCommand.Definition)\..\").Path
 Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"
@@ -20,6 +25,7 @@ try {
     $nuGetIsInPath = (FileExistsInPath "NuGet.exe") -or (FileExistsInPath "NuGet.bat")
     $nuget = "NuGet"
     if(-not($nuGetIsInPath)) {
+      # default to the tools directory. If not found, we will search for it.
       $nuget = Resolve-Path ".\Tools\Nuget\NuGet.exe"
     }
     if(!(Test-Path($nuget))) {  
@@ -30,8 +36,7 @@ try {
       }
       $nuget = (Resolve-Path $nugets[0].FullName).Path
     }
-    $output = "Packages"
     $package_files = Get-ChildItem . -recurse -include packages.config
-    $package_files | % { & $nuget i $_ -OutputDirectory $output }
+    $package_files | % { & $nuget i $_ -OutputDirectory $install_to }
   }
 } finally { Pop-Location }
