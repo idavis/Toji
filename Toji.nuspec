@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Toji</id>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <authors>Ian Davis</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>https://raw.github.com/idavis/Toji/master/LICENSE.txt</licenseUrl>
@@ -12,13 +12,10 @@
     <tags>psake build powershell</tags>
     <!--<iconUrl></iconUrl>-->
     <projectUrl>https://github.com/idavis/Toji</projectUrl>
-    <dependencies>
-      <dependency id="psake" version="4.0.1.0" />
-    </dependencies>
   </metadata>
   <files>
-      <file src="build\*" target="content\build" /> 
-      <file src="commands\*" target="content\commands" /> 
+      <file src="build\**\*.*" target="tools\build" /> 
+      <file src="commands\*" target="tools\commands" /> 
       <file src="nuget\*" target="tools" /> 
   </files>
 </package>
