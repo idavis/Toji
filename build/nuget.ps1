@@ -1,5 +1,5 @@
 ﻿# 
-# Copyright (c) 2011, Toji Project Contributors
+# Copyright (c) 2011-2012, Toji Project Contributors
 # 
 # Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 # See the file LICENSE.txt for details.
@@ -26,7 +26,7 @@ properties {
   }
   $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
   Assert (![string]::IsNullOrEmpty($nuget.target)) "The location of the nuget exe must be specified."
-  Assert (Test-Path($nuget.target)) "Could not find nuget exe"
+  
   Assert (![string]::IsNullOrEmpty($nuget.file)) "The location of the nuget exe must be specified."
   Assert (Test-Path($nuget.file)) "Could not find nuget exe"
 }
@@ -45,7 +45,7 @@ Task Bootstrap-NuGetPackages {
   } finally { Pop-Location }
 }
 
-Task Package -depends Set-NuSpecVersion {
+Task Package -depends Set-NuSpecVersion -PreCondition { (Test-Path($nuget.target)) } {
   if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
   $path = Split-Path $nuget.target
   Write-Host "Moving into $path"

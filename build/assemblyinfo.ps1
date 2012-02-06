@@ -1,5 +1,5 @@
 # 
-# Copyright (c) 2011, Toji Project Contributors
+# Copyright (c) 2011-2012, Toji Project Contributors
 # 
 # Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 # See the file LICENSE.txt for details.

@@ -17,5 +17,6 @@
       <file src="build\**\*.*" target="tools\build" /> 
       <file src="commands\*" target="tools\commands" /> 
       <file src="nuget\*" target="tools" /> 
+      <file src="LICENSE.txt" target="tools\build" /> 
   </files>
 </package>

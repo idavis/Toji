@@ -10,7 +10,7 @@ $folders = Get-ChildItem $buildToolsPath -recurse -force | ?{ $_.PSIsContainer }
 $folders | % { $newpath=(($_.FullName).Replace($buildToolsPath,$buildPath)); if(!(test-path $newpath)){ New-Item -ItemType Directory -Path "$newpath" -Force } }
 
 # copy main scripts
-$files = Get-ChildItem "$buildToolsPath" -recurse -exclude settings.ps1, build.ps1 | ? { !$_.PSIsContainer } 
+$files = Get-ChildItem "$buildToolsPath" -recurse -exclude settings.ps1, build.ps1, overrides.ps1 | ? { !$_.PSIsContainer } 
 
 $files | % { $newpath=(($_.FullName).Replace($buildToolsPath,$buildPath)); Copy-Item $_.FullName $newpath -Force }
 
@@ -18,6 +18,7 @@ $files | % { $newpath=(($_.FullName).Replace($buildToolsPath,$buildPath)); Copy-
 
 if(!(Test-Path("$buildToolsPath\settings.ps1"))) { Move-Item  "$buildToolsPath\settings.ps1" -Destination $buildPath }
 if(!(Test-Path("$buildToolsPath\build.ps1"))) { Move-Item  "$buildToolsPath\build.ps1" -Destination $buildPath }
+if(!(Test-Path("$buildToolsPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\overrides.ps1" -Destination $buildPath }
 
 # copy the solution level build scripts, ignore if they already exist
 
