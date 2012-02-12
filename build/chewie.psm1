@@ -20,7 +20,7 @@ function source
   $script:default_source = $source
 }
 
-function FileExistsInPath
+function script:FileExistsInPath
 {
   param (
     [Parameter(Position=0,Mandatory=$true)]
@@ -75,7 +75,7 @@ function chew
 
   $nuGetIsInPath = (FileExistsInPath "NuGet.exe") -or (FileExistsInPath "NuGet.bat")
   $command = ""
-    if($nuGetIsInPath) 
+  if($nuGetIsInPath) 
   {
     $command += "NuGet install" 
     if($script:version_packages -ne $true){$command += " -x"}

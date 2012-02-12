@@ -26,9 +26,10 @@ param(
 # We need to remove the module if it is already loaded.
 remove-module psake -ea 'SilentlyContinue'
 
-$scriptPath = Split-Path -parent $myInvocation.MyCommand.Definition
+$scriptPath = Split-Path -parent $MyInvocation.MyCommand.Definition
 $rootPath = (Resolve-Path $scriptPath\..)
 
+. $scriptPath\bootstrap.ps1 $scriptPath
 # Load psake
 $psakeModule = @(Get-ChildItem $rootPath\* -recurse -include psake.psm1)[0].FullName
 Import-Module $psakeModule

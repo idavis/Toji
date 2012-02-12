@@ -8,21 +8,20 @@
 properties {
   Write-Output "Loading xunit properties"
   $xunit = @{}
-  $xunit.runner = $null#(Resolve-Path .\Path\to\xunit\console)
   $xunit.logfile = "$($release.dir)\xunit.log.xml"
-  Assert (![string]::IsNullOrEmpty($xunit.runner)) "The location of the xunit runner must be specified."
-  Assert (Test-Path($xunit.runner)) "Could not find xunit runner"
+  $xunit.runner = (Get-ChildItem "$($packages.dir)\*" -recurse -include xunit.console.clr4.x86.exe).FullName
 }
 
-function Invoke-TestRunner {
+Task Invoke-TestRunner -PreCondition { return (Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner)) } {
   param(
     [Parameter(Position=0,Mandatory=0)]
     [string[]]$dlls = @()
   )
+
   if ($dlls.Length -le 0) { 
      Write-Host -ForegroundColor Red "No tests defined"
      return 
   }
   # TODO: This only keeps the last log file. Need to output many and merge.
-  $dlls | % { exec { Invoke-Expression "& `"$($xunit.runner)`" `"$_`" /xml `"$($build.dir)\$($xunit.logfile)`" /noshadow" }}
+  $dlls | % { exec { & $xunit.runner "$_" /noshadow }}
 }

@@ -5,6 +5,10 @@
 # See the file LICENSE.txt for details.
 # 
 
+# The global settings are provided in the settings.ps1 file. If you
+# want to override anything in it, you can use the overrides.ps1 to 
+# replace any property value used in any indcluded file. Remember that 
+# values provided on the command line will override all of these files below.
 Include settings.ps1
 #Include xunit.ps1
 #Include nunit.ps1
@@ -12,6 +16,7 @@ Include nuget.ps1
 Include msbuild.ps1
 Include assemblyinfo.ps1
 Include overrides.ps1
+Include git.ps1
 
 properties {
   Write-Output "Loading build properties"
@@ -19,8 +24,8 @@ properties {
   # and will not have access to any of your shared properties.
 }
 
-Task Default -depends Init, Compile #, Test
-Task Release -depends Default, Package
+Task Default -depends Initialize, Compile #, Test
+Task Release -depends Default #, Package
 Task Deploy -depends Package, Publish
 
 Task Test { 
@@ -28,24 +33,32 @@ Task Test {
   Invoke-TestRunner $test_dlls
 }
 
-Task IntegrationTest -depends Test { 
+Task IntegrationTest -Depends Test { 
   $test_dlls = gci "$($build.dir)\*.IntegrationTests.dll"
   Invoke-TestRunner $test_dlls
 }
 
-Task Init -depends Clean, Bootstrap-NuGetPackages {
-  #Bootstrap-NuGet
-  new-item $release.dir -itemType directory | Out-Null
-  new-item $build.dir -itemType directory | Out-Null
+Task Initialize -Depends Clean, Bootstrap-NuGetPackages {
+  New-Item $release.dir -ItemType Directory | Out-Null
+  New-Item $build.dir -ItemType Directory | Out-Null
 }
 
-Task Compile -depends Version-AssemblyInfo, Init, Invoke-MsBuild
+Task Compile -Depends Version-AssemblyInfo, Initialize, Invoke-MsBuild
 
 Task Clean { 
-  remove-item -force -recurse $build.dir -ErrorAction SilentlyContinue | Out-Null
-  remove-item -force -recurse $release.dir -ErrorAction SilentlyContinue | Out-Null
+  Remove-Item -Force -Recurse $build.dir -ErrorAction SilentlyContinue | Out-Null
+  Remove-Item -Force -Recurse $release.dir -ErrorAction SilentlyContinue | Out-Null
+}
+
+Task Publish -Depends Package {
+  Publish-NuGetPackage
+}
+
+Task Package -Depends Create-NuGetPackage {
+  
 }
 
 Task ? -Description "Helper to display task info" {
+  Write-Host (Get-GitRevision)
   Write-Documentation
 }

@@ -9,12 +9,9 @@ properties {
   Write-Output "Loading nunit properties"
   $nunit = @{}
   $nunit.runner = (Get-ChildItem "$($packages.dir)\*" -recurse -include nunit-console-x86.exe).FullName
-  $nunit.runner
-  Assert (![string]::IsNullOrEmpty($nunit.runner)) "The location of the nunit runner must be specified."
-  Assert (Test-Path($nunit.runner)) "Could not find nunit runner"
 }
 
-function Invoke-TestRunner {
+Task Invoke-TestRunner -PreCondition { return (Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner)) } {
   param(
     [Parameter(Position=0,Mandatory=0)]
     [string[]]$dlls = @()

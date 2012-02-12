@@ -11,5 +11,4 @@
 
 properties {
   Write-Output "Loading override settings"
-  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "1.0.4" }
 }

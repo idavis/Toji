@@ -9,10 +9,24 @@
 
 param(
   [Parameter( Position = 0, Mandatory = 0 )]
+  [string] $path = ((Resolve-Path "$(Split-Path -parent $MyInvocation.MyCommand.Definition)\..\").Path),
+  [Parameter( Position = 1, Mandatory = 0 )]
   [string] $install_to = 'Packages'
 )
 
-$path = (Resolve-Path "$(Split-Path -parent $MyInvocation.MyCommand.Definition)\..\").Path
+function script:FileExistsInPath
+{
+  param (
+    [Parameter(Position=0,Mandatory=$true)]
+    [string] $fileName = $null
+  )
+
+  $path = Get-Childitem Env:Path
+  $found = $false
+  foreach ($folder in $path.Value.Split(";")) { if (Test-Path "$folder\$fileName") { $found = $true; break } }
+  Write-Output $found
+}
+
 Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"

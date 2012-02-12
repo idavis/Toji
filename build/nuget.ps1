@@ -45,7 +45,7 @@ Task Bootstrap-NuGetPackages {
   } finally { Pop-Location }
 }
 
-Task Package -depends Set-NuSpecVersion -PreCondition { (Test-Path($nuget.target)) } {
+Task Create-NuGetPackage -depends Set-NuSpecVersion -PreCondition { (Test-Path($nuget.target)) } {
   if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
   $path = Split-Path $nuget.target
   Write-Host "Moving into $path"
@@ -56,7 +56,7 @@ Task Package -depends Set-NuSpecVersion -PreCondition { (Test-Path($nuget.target
   } finally { Pop-Location }
 }
 
-Task Publish {
+Task Publish-NuGetPackage {
   Push-Location "$($nuget.pub_dir)"
   try {
     ls "*$($build.version).nupkg" | % { & $nuget.file push $_ }
