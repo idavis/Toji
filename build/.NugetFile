@@ -1,2 +1,2 @@
 install_to '.'
-chew 'psake'
+chew 'psake' '4.0.1.0'

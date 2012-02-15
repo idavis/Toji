@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Toji</id>
-    <version>1.0.4</version>
+    <version>1.0.0</version>
     <authors>Ian Davis</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>https://raw.github.com/idavis/Toji/master/LICENSE.txt</licenseUrl>
@@ -14,9 +14,11 @@
     <projectUrl>https://github.com/idavis/Toji</projectUrl>
   </metadata>
   <files>
-      <file src="build\**\*.*" target="tools\build" /> 
-      <file src="commands\*" target="tools\commands" /> 
-      <file src="nuget\*" target="tools" /> 
-      <file src="LICENSE.txt" target="tools\build" /> 
+    <file src="build\**\*.*" target="tools\build" exclude="build\psake\**" /> 
+    <file src="build.ps1" target="tools\commands" /> 
+    <file src="build.cmd" target="tools\commands" /> 
+    <file src="build-release.cmd" target="tools\commands" /> 
+    <file src="nuget\*" target="tools" /> 
+    <file src="LICENSE.txt" target="tools\build" /> 
   </files>
 </package>

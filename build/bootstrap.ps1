@@ -27,6 +27,16 @@ function script:FileExistsInPath
   Write-Output $found
 }
 
+function script:BootStrap-Chewie
+{
+  if(!(test-path $pwd\.NugetFile))
+  {
+    new-item -path $pwd -name .NugetFile -itemtype file
+    add-content $pwd\.NugetFile "install_to '.'"
+    add-content $pwd\.NugetFile "chew 'psake' '4.0.1.0'"
+  }
+}
+
 Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"
@@ -34,6 +44,7 @@ try {
     Write-Output "Loading chewie"
     Import-Module "$pwd\chewie.psm1"
     Write-Output "Running chewie"
+    BootStrap-Chewie
     Invoke-Chewie
   } else {
     $nuGetIsInPath = (FileExistsInPath "NuGet.exe") -or (FileExistsInPath "NuGet.bat")
