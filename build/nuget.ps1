@@ -13,22 +13,23 @@ properties {
   
   $nuget = @{}
   $nuget.pub_dir = "$($release.dir)"
-  $nuget.file = "$($tools.dir)\NuGet\NuGet.exe"
-  if(!(Test-Path($nuget.file))) {  
-    $nuget.file = (Get-ChildItem "$($packages.dir)\*" -recurse -include NuGet.exe).FullName
-  }
+  $nuget.file = (Resolve-NuGet)
+  Write-Output $nuget.file
   # add either the project_name or nuspec file to use when packaging.
-  $nuget.target = "$($source.dir)\$($solution.name).nuspec"
+  $nuget.target = "$($base.dir)\$($solution.name).nuspec"
   $nuget.options = ""
+  if(!(Test-Path($nuget.target))) { 
+    Write-Output "Could not find $($nuget.target)" 
+    $nuget.target = "$($source.dir)\$($solution.name).nuspec"
+  }
   if(!(Test-Path($nuget.target))) {  
+    Write-Output "Could not find $($nuget.target)" 
     $nuget.target = "$($source.dir)\$($solution.name)\$($solution.name).csproj"
     $nuget.options = "-Build -Sym -Properties Configuration=$($build.configuration)"
   }
-  $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
-  Assert (![string]::IsNullOrEmpty($nuget.target)) "The location of the nuget exe must be specified."
-  
-  Assert (![string]::IsNullOrEmpty($nuget.file)) "The location of the nuget exe must be specified."
-  Assert (Test-Path($nuget.file)) "Could not find nuget exe"
+  if(!(Test-Path($nuget.target))) {  
+    Write-Output "Could not find $($nuget.target)" 
+  }
 }
 
 Task Bootstrap-NuGetPackages {
@@ -45,14 +46,21 @@ Task Bootstrap-NuGetPackages {
   } finally { Pop-Location }
 }
 
-Task Create-NuGetPackage -depends Set-NuSpecVersion -PreCondition { (Test-Path($nuget.target)) } {
+Task Create-NuGetPackage -depends Set-NuSpecVersion {
+  Assert (![string]::IsNullOrEmpty($nuget.file) -and (Test-Path($nuget.file))) "The location of the nuget exe must be specified."
+  Assert (Test-Path($nuget.file)) "Could not find nuget exe"
+
+  $nuget.command = "& $($nuget.file) pack $($nuget.target) $($nuget.options) -Version $($build.version) -OutputDirectory $($nuget.pub_dir)"
+  
   if(!(Test-Path($nuget.pub_dir))) { new-item $nuget.pub_dir -itemType directory | Out-Null }
-  $path = Split-Path $nuget.target
-  Write-Host "Moving into $path"
-  Push-Location $path
+  $nugetTargetPath = (Split-Path $nuget.target)
+  Write-Output "Moving into $nugetTargetPath"
+  Push-Location $nugetTargetPath
   try {
-    Write-Host "Executing exec { Invoke-Expression $($nuget.command) }"
-    exec { Invoke-Expression $nuget.command }
+    $message = "Error executing command: {0}"
+    $command = "Invoke-Expression $($nuget.command)"
+    $errorMessage = $message -f $command
+    exec { Invoke-Expression $nuget.command } $errorMessage
   } finally { Pop-Location }
 }
 
@@ -64,6 +72,8 @@ Task Publish-NuGetPackage {
 }
 
 Task Set-NuSpecVersion {
+  Assert (![string]::IsNullOrEmpty($nuget.target) -and (Test-Path($nuget.target))) "The location of the nuspec file must be specified."
+
   $version_pattern = "<version>\d*\.\d*\.\d*</version>"   # 3 digit for semver
   $content = Get-Content $nuget.target | % { [Regex]::Replace($_, $version_pattern, "<version>$($build.version)</version>") } 
   Set-Content -Value $content -Path $nuget.target

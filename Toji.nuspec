@@ -17,7 +17,6 @@
     <file src="build\**\*.*" target="tools\build" exclude="build\psake\**" /> 
     <file src="build.ps1" target="tools\commands" /> 
     <file src="build.cmd" target="tools\commands" /> 
-    <file src="build-release.cmd" target="tools\commands" /> 
     <file src="nuget\*" target="tools" /> 
     <file src="LICENSE.txt" target="tools\build" /> 
   </files>

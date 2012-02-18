@@ -24,9 +24,9 @@ properties {
   # and will not have access to any of your shared properties.
 }
 
-Task Default -depends Initialize, Compile #, Test
+Task Default -depends Initialize, Compile
 Task Release -depends Default #, Package
-Task Deploy -depends Package, Publish
+Task Deploy -depends Publish
 
 Task Test { 
   $test_dlls = gci "$($build.dir)\*.Tests.dll"
@@ -59,6 +59,5 @@ Task Package -Depends Create-NuGetPackage {
 }
 
 Task ? -Description "Helper to display task info" {
-  Write-Host (Get-GitRevision)
   Write-Documentation
 }

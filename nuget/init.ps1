@@ -22,11 +22,9 @@ if(!(Test-Path("$buildToolsPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\
 
 # copy the solution level build scripts, ignore if they already exist
 
-$toolCommandPath = "$toolsPath\commands"
-if(!(Test-Path("$toolCommandPath\build.ps1"))) { Move-Item  "$toolCommandPath\build.ps1" -Destination $rootPath }
-if(!(Test-Path("$toolCommandPath\build.cmd"))) { Move-Item  "$toolCommandPath\build.cmd" -Destination $rootPath }
-if(!(Test-Path("$toolCommandPath\build-release.cmd"))) { Move-Item  "$toolCommandPath\build-release.cmd" -Destination $rootPath }
+if(!(Test-Path("$rootPath\build.ps1"))) { Move-Item  "$rootPath\build.ps1" -Destination $rootPath }
+if(!(Test-Path("$rootPath\build.cmd"))) { Move-Item  "$rootPath\build.cmd" -Destination $rootPath }
 
 # remove everything as we have copied it over.
 
-#Remove-Item $installPath -recurse -Force
+Remove-Item $installPath -recurse -Force

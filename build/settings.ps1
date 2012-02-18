@@ -23,6 +23,8 @@ properties {
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
+  # BUILD_NUMBER is defined during CI builds. Make sure that this value
+  # is changed if the CI system in use does not set this variable.
   $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "1.0.0" }
   
   $tools = @{}

@@ -8,16 +8,17 @@
 properties {
   Write-Output "Loading xunit properties"
   $xunit = @{}
-  $xunit.logfile = "$($release.dir)\xunit.log.xml"
-  $xunit.runner = (Get-ChildItem "$($packages.dir)\*" -recurse -include xunit.console.clr4.x86.exe).FullName
+  $xunit.logfile = "$($build.dir)\xunit.log.xml"
+  $xunit.runner = (Get-ChildItem "$($base.dir)\*" -recurse -include xunit.console.clr4.x86.exe).FullName
 }
 
-Task Invoke-TestRunner -PreCondition { return (Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner)) } {
+function Invoke-TestRunner {
   param(
     [Parameter(Position=0,Mandatory=0)]
     [string[]]$dlls = @()
   )
 
+Assert ((Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner))) "xunit runner could not be found"
   if ($dlls.Length -le 0) { 
      Write-Host -ForegroundColor Red "No tests defined"
      return 
