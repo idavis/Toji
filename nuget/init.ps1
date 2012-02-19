@@ -16,9 +16,9 @@ $files | % { $newpath=(($_.FullName).Replace($buildToolsPath,$buildPath)); Copy-
 
 # copy the build.ps1 and settings.ps1, ignore if they already exist
 
-if(!(Test-Path("$buildToolsPath\settings.ps1"))) { Move-Item  "$buildToolsPath\settings.ps1" -Destination $buildPath }
-if(!(Test-Path("$buildToolsPath\build.ps1"))) { Move-Item  "$buildToolsPath\build.ps1" -Destination $buildPath }
-if(!(Test-Path("$buildToolsPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\overrides.ps1" -Destination $buildPath }
+if(!(Test-Path("$buildPath\settings.ps1"))) { Move-Item  "$buildToolsPath\settings.ps1" -Destination $buildPath }
+if(!(Test-Path("$buildPath\build.ps1"))) { Move-Item  "$buildToolsPath\build.ps1" -Destination $buildPath }
+if(!(Test-Path("$buildPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\overrides.ps1" -Destination $buildPath }
 
 # if we don't detect nuget, copy it over and bootstrap it.
 
@@ -30,9 +30,9 @@ if(!$nugetIsOnPath -and !(Test-Path("$buildPath\NuGet.exe"))) {
 }
 
 # copy the solution level build scripts, ignore if they already exist
-
-if(!(Test-Path("$rootPath\build.ps1"))) { Move-Item  "$rootPath\build.ps1" -Destination $rootPath }
-if(!(Test-Path("$rootPath\build.cmd"))) { Move-Item  "$rootPath\build.cmd" -Destination $rootPath }
+$commandsPath = "$toolsPath\commands"
+if(!(Test-Path("$rootPath\build.ps1"))) { Move-Item  "$commandsPath\build.ps1" -Destination $rootPath }
+if(!(Test-Path("$rootPath\build.cmd"))) { Move-Item  "$commandsPath\build.cmd" -Destination $rootPath }
 
 # remove everything as we have copied it over.
 
