@@ -8,7 +8,7 @@
 properties {
   Write-Output "Loading git properties"
   $git = @{}
-  $git.file = @(get-command git)[0]
+  $git.file = @(Get-Command git)[0]
 }
 
 function Invoke-Git {
@@ -17,7 +17,7 @@ function Invoke-Git {
     [string[]]$args = @()
   )
   if ($args.Length -le 0) { 
-     Write-Host -ForegroundColor Red "No git arguments defined"
+     Write-Output "No git arguments defined"
      return 
   }
   & $git.file $args

@@ -20,6 +20,16 @@ if(!(Test-Path("$buildToolsPath\settings.ps1"))) { Move-Item  "$buildToolsPath\s
 if(!(Test-Path("$buildToolsPath\build.ps1"))) { Move-Item  "$buildToolsPath\build.ps1" -Destination $buildPath }
 if(!(Test-Path("$buildToolsPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\overrides.ps1" -Destination $buildPath }
 
+# if we don't detect nuget, copy it over and bootstrap it.
+
+$nugetToolsPath = "$toolsPath\tools"
+$nugetIsOnPath = (@(Get-Command NuGet).Length -gt 0)
+if(!$nugetIsOnPath -and !(Test-Path("$buildToolsPath\NuGet.exe"))) {
+  Move-Item "$nugetToolsPath\NuGet.exe" -Destination $buildPath }
+  & "$buildPath\NuGet.exe"
+  if(!(Test-Path "$buildPath\nuget.exe.old")) { Remove-Item "$buildPath\nuget.exe.old" -Force }
+}
+
 # copy the solution level build scripts, ignore if they already exist
 
 if(!(Test-Path("$rootPath\build.ps1"))) { Move-Item  "$rootPath\build.ps1" -Destination $rootPath }
@@ -27,4 +37,4 @@ if(!(Test-Path("$rootPath\build.cmd"))) { Move-Item  "$rootPath\build.cmd" -Dest
 
 # remove everything as we have copied it over.
 
-Remove-Item $installPath -recurse -Force
+Remove-Item $installPath -Recurse -Force

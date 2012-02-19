@@ -6,7 +6,7 @@
 # 
 
 properties {
-  Write-Output "Loading msbuild properties"
+  Write-Output "Loading MSBuild properties"
   $msbuild = @{}
   $msbuild.logfilename = "MSBuildOutput.txt"
   $msbuild.logfilepath = $build.dir

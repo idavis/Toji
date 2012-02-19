@@ -33,7 +33,7 @@ properties {
 }
 
 Task Bootstrap-NuGetPackages {
-  Write-Output "Loading Nuget Dependencies"
+  Write-Output "Installing Nuget Dependencies"
   Push-Location "$($base.dir)"
   try {
     if($usingChewie) {

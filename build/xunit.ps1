@@ -14,15 +14,17 @@ properties {
 
 function Invoke-TestRunner {
   param(
-    [Parameter(Position=0,Mandatory=0)]
+    [Parameter(Position=0,Mandatory=$true)]
     [string[]]$dlls = @()
   )
 
-Assert ((Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner))) "xunit runner could not be found"
+  Assert ((Test-Path($xunit.runner)) -and (![string]::IsNullOrEmpty($xunit.runner))) "xunit runner could not be found"
+
   if ($dlls.Length -le 0) { 
-     Write-Host -ForegroundColor Red "No tests defined"
+     Write-Output "No tests defined"
      return 
   }
+
   # TODO: This only keeps the last log file. Need to output many and merge.
   $dlls | % { exec { & $xunit.runner "$_" /noshadow }}
 }

@@ -13,13 +13,14 @@ properties {
 
 function Invoke-TestRunner {
   param(
-    [Parameter(Position=0,Mandatory=0)]
+    [Parameter(Position=0,Mandatory=$true)]
     [string[]]$dlls = @()
   )
 
   Assert ((Test-Path($nunit.runner)) -and (![string]::IsNullOrEmpty($nunit.runner))) "NUnit runner could not be found"
+  
   if ($dlls.Length -le 0) { 
-     Write-Host -ForegroundColor Red "No tests defined"
+     Write-Output "No tests defined"
      return 
   }
   exec { & $nunit.runner $dlls /noshadow }

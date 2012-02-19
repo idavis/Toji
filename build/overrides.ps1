@@ -6,8 +6,7 @@
 # 
 
 # This file is where you can override any settings specified in the other scripts.
-# Remember that if you use these values in any of the property blocks that they
-# will use the old values. Try to use these values only in your tasks.
+# These settings can also be used to override conventions such as solution name and nuspec file.
 
 properties {
   Write-Output "Loading override settings"

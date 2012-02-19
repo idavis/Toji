@@ -16,7 +16,7 @@ Include nuget.ps1
 Include msbuild.ps1
 Include assemblyinfo.ps1
 Include overrides.ps1
-Include git.ps1
+#Include git.ps1
 
 properties {
   Write-Output "Loading build properties"

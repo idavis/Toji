@@ -6,8 +6,7 @@
 # 
 
 # This file contains the build-wide settings used by all scripts.
-# You can add your own variables here, but do not change any default values.
-# Instead, open the overrides.ps1 for those changes.
+# The overrides.ps1 can be used for CI settings where conventions don't work.
 
 properties {
   Write-Output "Loading settings properties"
@@ -23,9 +22,11 @@ properties {
   $build = @{}
   $build.dir = "$($base.dir)\bin"
   $build.configuration = "Release"
+
   # BUILD_NUMBER is defined during CI builds. Make sure that this value
   # is changed if the CI system in use does not set this variable.
-  $build.version = if($env:BUILD_NUMBER) {$env:BUILD_NUMBER} else { "1.0.0" }
+  # Make sure Semver versioning is used for the build number.
+  $build.version = if($env:BUILD_NUMBER) { $env:BUILD_NUMBER } else { "1.0.0" }
   
   $tools = @{}
   $tools.dir = "$($base.dir)\tools"

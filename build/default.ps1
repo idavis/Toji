@@ -29,7 +29,9 @@ remove-module psake -ea 'SilentlyContinue'
 $scriptPath = Split-Path -parent $MyInvocation.MyCommand.Definition
 $rootPath = (Resolve-Path $scriptPath\..)
 
+# bootstrap the build system fetching any dependencies.
 . $scriptPath\bootstrap.ps1 $scriptPath
+
 # Load psake
 $psakeModule = @(Get-ChildItem $rootPath\* -recurse -include psake.psm1)[0].FullName
 Import-Module $psakeModule
