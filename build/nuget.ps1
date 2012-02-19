@@ -14,7 +14,6 @@ properties {
   $nuget = @{}
   $nuget.pub_dir = "$($release.dir)"
   $nuget.file = (Resolve-NuGet)
-  Write-Output $nuget.file
   # add either the project_name or nuspec file to use when packaging.
   $nuget.target = "$($base.dir)\$($solution.name).nuspec"
   $nuget.options = ""

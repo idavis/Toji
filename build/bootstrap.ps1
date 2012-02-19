@@ -14,10 +14,8 @@ param(
   [string] $install_to = 'Packages'
 )
 
-function script:BootStrap-Chewie
-{
-  if(!(test-path $pwd\.NugetFile))
-  {
+function script:BootStrap-Chewie {
+  if(!(test-path $pwd\.NugetFile)) {
     new-item -path $pwd -name .NugetFile -itemtype file
     add-content $pwd\.NugetFile "install_to '.'"
     add-content $pwd\.NugetFile "chew 'psake' '4.0.1.0'"
@@ -57,11 +55,12 @@ Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"
   $nuget = Resolve-NuGet
+  BootStrap-Chewie
+  Write-Output "Nuget = $nuget"
   if(Test-Path ".NugetFile") {
     Write-Output "Loading chewie"
     Import-Module "$pwd\chewie.psm1"
     Write-Output "Running chewie"
-    BootStrap-Chewie
     Invoke-Chewie
   } else {
     $package_files = Get-ChildItem . -recurse -include packages.config
