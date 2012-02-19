@@ -22,10 +22,9 @@ if(!(Test-Path("$buildToolsPath\overrides.ps1"))) { Move-Item  "$buildToolsPath\
 
 # if we don't detect nuget, copy it over and bootstrap it.
 
-$nugetToolsPath = "$toolsPath\tools"
 $nugetIsOnPath = (@(Get-Command NuGet).Length -gt 0)
 if(!$nugetIsOnPath -and !(Test-Path("$buildToolsPath\NuGet.exe"))) {
-  Move-Item "$nugetToolsPath\NuGet.exe" -Destination $buildPath }
+  Move-Item "$toolsPath\NuGet.exe" -Destination $buildPath }
   & "$buildPath\NuGet.exe"
   if(!(Test-Path "$buildPath\nuget.exe.old")) { Remove-Item "$buildPath\nuget.exe.old" -Force }
 }
