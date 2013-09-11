@@ -18,7 +18,7 @@ function script:BootStrap-Chewie {
   if(!(test-path $pwd\.NugetFile)) {
     new-item -path $pwd -name .NugetFile -itemtype file
     add-content $pwd\.NugetFile "install_to '.'"
-    add-content $pwd\.NugetFile "chew 'psake' '4.0.1.0'"
+    add-content $pwd\.NugetFile "chew 'psake' '4.2.0.1'"
   }
 }
 
@@ -49,6 +49,23 @@ function global:Resolve-NuGet {
     $env:Path = $env:Path + ";" + (Split-Path $nuget)
   }
   return $nuget
+}
+
+function global:Resolve-Ilmerge {
+  $ilmergeIsInPath = (FileExistsInPath "Ilmerge.exe")
+  $ilmerge = "Ilmerge"
+  if($ilmergeIsInPath) {
+    $ilmerge = (@(get-command ilmerge) | % {$_.Definition} | ? { (Test-Path $_) } | Select-Object -First 1)
+  } else {  
+    $ilmerges = @(Get-ChildItem "..\*" -recurse -include Ilmerge.exe)
+    if ($ilmerges.Length -le 0) { 
+      Write-Output "No ilmerge executables found."
+      return
+    }
+    $ilmerge = (Resolve-Path $ilmerges[0]).Path
+    $env:Path = $env:Path + ";" + (Split-Path $ilmerge)
+  }
+  return $ilmerge
 }
 
 Push-Location $path

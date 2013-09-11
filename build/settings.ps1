@@ -20,13 +20,13 @@ properties {
   if(!(Test-Path($source.dir))) { $source.dir = "$($base.dir)" }
   
   $build = @{}
-  $build.dir = "$($base.dir)\bin"
+  $build.dir = "$($base.dir)\bin\$framework"
   $build.configuration = "Release"
 
   # BUILD_NUMBER is defined during CI builds. Make sure that this value
   # is changed if the CI system in use does not set this variable.
   # Make sure Semver versioning is used for the build number.
-  $build.version = if($env:BUILD_NUMBER) { $env:BUILD_NUMBER } else { "0.2.2" }
+  $build.version = if($env:BUILD_NUMBER) { $env:BUILD_NUMBER } else { "1.0.0" }
   
   $tools = @{}
   $tools.dir = "$($base.dir)\tools"
