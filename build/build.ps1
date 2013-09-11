@@ -17,6 +17,7 @@ Include msbuild.ps1
 Include assemblyinfo.ps1
 #Include git.ps1
 #Include ilmerge.ps1
+Include wix.ps1
 Include overrides.ps1
 
 properties {
@@ -55,7 +56,7 @@ Task Publish -Depends Package {
   Publish-NuGetPackage
 }
 
-Task Package -Depends Create-NuGetPackage {
+Task Package -Depends Create-NuGetPackage, Create-WixPackage {
   
 }
 
