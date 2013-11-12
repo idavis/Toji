@@ -19,8 +19,7 @@ function script:BootStrap-Chewie {
     new-item -path $pwd -name .NugetFile -itemtype file
     add-content $pwd\.NugetFile "install_to '.'"
     add-content $pwd\.NugetFile "chew 'psake' '4.2.0.1'"
-    #add-content $pwd\.NugetFile "chew 'NUnit.Runners' '2.6.2'"
-    #add-content $pwd\.NugetFile "chew 'xunit.runners' '1.9.2'"
+    add-content $pwd\.NugetFile "chew 'NUnit.Runners' '2.6.3'"
   }
 }
 
@@ -70,6 +69,18 @@ function global:Resolve-Ilmerge {
   return $ilmerge
 }
 
+[Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") > $null
+function global:Compress-Folder {
+    param (
+      [Parameter(Position=0,Mandatory=$true)]
+      [string] $zipfilename,
+      [Parameter(Position=1,Mandatory=$true)]
+      [string] $sourcedir
+    )
+    $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
+    [System.IO.Compression.ZipFile]::CreateFromDirectory($sourcedir, $zipfilename, $compressionLevel, $false)
+}
+
 Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"
@@ -86,3 +97,4 @@ try {
     $package_files | % { & $nuget i $_ -OutputDirectory $install_to }
   }
 } finally { Pop-Location }
+

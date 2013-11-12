@@ -18,6 +18,7 @@ Include assemblyinfo.ps1
 #Include git.ps1
 #Include ilmerge.ps1
 Include msi.ps1
+Include website.ps1
 Include overrides.ps1
 
 properties {
@@ -56,7 +57,7 @@ Task Publish -Depends Package {
   Publish-NuGetPackage
 }
 
-Task Package -Depends Create-NuGetPackage, Get-MsiPackage {
+Task Package -Depends Create-NuGetPackage, Get-MsiPackage, Get-WebsitePackage {
   
 }
 

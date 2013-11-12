@@ -12,7 +12,7 @@ properties {
 }
 
 Task Get-MsiPackage {
-  if(!(Test-Path($msi.pub_dir))) { new-item $msi.pub_dir -itemType directory | Out-Null }
+  if(!(Test-Path($msi.pub_dir))) { New-Item $msi.pub_dir -itemType directory | Out-Null }
 
   Push-Location "$($msi.pub_dir)"
   try {
