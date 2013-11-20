@@ -13,12 +13,16 @@
   [System.Collections.Hashtable]$properties = @{}
 )
 
-$scriptPath = (Split-Path -parent $MyInvocation.MyCommand.Definition)
-$buildPath = (Resolve-Path $scriptPath\build)
+$rootPath = (Split-Path -parent $MyInvocation.MyCommand.Definition)
+$buildPath = (Resolve-Path $rootPath\build)
+
+$psakeLocations = @(Get-ChildItem $rootPath\build\* -recurse -include psake.ps1)
+$psakeModule = $psakeLocations[0].FullName
+$psakeModuleDirectory = $psakeLocations[0].DirectoryName
 
 . $buildPath\bootstrap.ps1 $buildPath
-$psakeModule = @(Get-ChildItem $scriptPath\* -recurse -include psake.ps1)[0].FullName
-. $psakeModule $buildFile $taskList $framework $docs $parameters $properties
+. $psakeModule -buildFile $buildFile -taskList $taskList -framework $framework -docs:$docs -parameters $parameters -properties $properties -scriptPath $psakeModuleDirectory
+. $psakeModule -buildFile $buildFile -taskList Package -framework $framework -docs:$docs -parameters $parameters -properties $properties -scriptPath $psakeModuleDirectory
 
 if($env:BUILD_NUMBER) {
   [Environment]::Exit($lastexitcode)

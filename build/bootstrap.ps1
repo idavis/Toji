@@ -18,7 +18,8 @@ function script:BootStrap-Chewie {
   if(!(test-path $pwd\.NugetFile)) {
     new-item -path $pwd -name .NugetFile -itemtype file
     add-content $pwd\.NugetFile "install_to '.'"
-    add-content $pwd\.NugetFile "chew 'psake' '4.0.1.0'"
+    add-content $pwd\.NugetFile "chew 'psake' '4.2.0.1'"
+    add-content $pwd\.NugetFile "chew 'NUnit.Runners' '2.6.3'"
   }
 }
 
@@ -51,6 +52,35 @@ function global:Resolve-NuGet {
   return $nuget
 }
 
+function global:Resolve-Ilmerge {
+  $ilmergeIsInPath = (FileExistsInPath "Ilmerge.exe")
+  $ilmerge = "Ilmerge"
+  if($ilmergeIsInPath) {
+    $ilmerge = (@(get-command ilmerge) | % {$_.Definition} | ? { (Test-Path $_) } | Select-Object -First 1)
+  } else {  
+    $ilmerges = @(Get-ChildItem "..\*" -recurse -include Ilmerge.exe)
+    if ($ilmerges.Length -le 0) { 
+      Write-Output "No ilmerge executables found."
+      return
+    }
+    $ilmerge = (Resolve-Path $ilmerges[0]).Path
+    $env:Path = $env:Path + ";" + (Split-Path $ilmerge)
+  }
+  return $ilmerge
+}
+
+[Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") > $null
+function global:Compress-Folder {
+    param (
+      [Parameter(Position=0,Mandatory=$true)]
+      [string] $zipfilename,
+      [Parameter(Position=1,Mandatory=$true)]
+      [string] $sourcedir
+    )
+    $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
+    [System.IO.Compression.ZipFile]::CreateFromDirectory($sourcedir, $zipfilename, $compressionLevel, $false)
+}
+
 Push-Location $path
 try {
   Write-Output "Loading Nuget Dependencies"
@@ -67,3 +97,4 @@ try {
     $package_files | % { & $nuget i $_ -OutputDirectory $install_to }
   }
 } finally { Pop-Location }
+
