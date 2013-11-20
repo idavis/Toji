@@ -16,7 +16,7 @@ Task Get-WebsitePackage {
 
   Push-Location $website_package.pub_dir
   try {
-        Get-ChildItem "$($build.dir)\_PublishedWebsites\" -Name -attributes D -recurse | %{
+        Get-ChildItem "$($build.dir)\_PublishedWebsites\" -Name -attributes D | %{
             Compress-Folder -zipfilename "$($build.dir)\_PublishedWebsites\$($_).zip" -sourcedir "$($build.dir)\_PublishedWebsites\$($_)"
         }
         
